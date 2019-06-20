@@ -2,6 +2,7 @@ import cv2
 import numpy as np
 import matplotlib.pyplot as plt
 
+# represents a line segment between two points
 class LineSegment(object):
     def __init__(self, x1, y1, x2, y2):
         self.x1 = x1
@@ -9,6 +10,8 @@ class LineSegment(object):
         self.x2 = x2
         self.y2 = y2
 
+# represents a line
+# b = yc*y + xc*x
 class LinearEquation2D(object):
     def __init__(self, xc, yc, b):
         self.xc = xc
@@ -21,7 +24,7 @@ class LinearEquation2D(object):
         
         plt.plot(x, y, draw)
 
-
+# helper function to get a line from a line segment
 def lineFromSegment(seg):
     m = (seg.y2 - seg.y1)/(seg.x2 - seg.x1)
     xc = m
@@ -29,9 +32,14 @@ def lineFromSegment(seg):
     b = m * seg.x1 - seg.y1
     return LinearEquation2D(xc, yc, b)
 
+# convenience
 def leq(xc, yc, b):
     return LinearEquation2D(xc, yc, b)
 
+# solve a 2-variable system of equations.
+# eqns is a list of LinearEquation2D
+#
+# returns a list [x, y] representing the solution
 def solve2D(eqns):
     A = np.array([[e.xc, e.yc] for e in eqns], dtype='float')
     B = np.array([e.b for e in eqns], dtype='float')
@@ -104,15 +112,3 @@ for ybase in [-100, -75, -50, -25, 0]:
     plt.grid()
     plt.show()
 
-"""
-# y = -x + 1
-# y = x + 1
-A = np.array([[-1,-1],[1,-1]], dtype='float')
-B = np.array([-1,-1], dtype='float')
-print ( cv2.solve(A,B) )
-
-# three lines with middle intersection
-A = np.array([[-10,-1],[1,-2],[2,-1]], dtype='float')
-B = np.array([2,-5,-7], dtype='float')
-print ( cv2.solve(A,B, flags=cv2.DECOMP_SVD) )
-"""
