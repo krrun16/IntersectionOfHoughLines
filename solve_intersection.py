@@ -37,24 +37,8 @@ def solve2D(eqns):
     B = np.array([e.b for e in eqns], dtype='float')
     return cv2.solve(A, B, flags=cv2.DECOMP_SVD)
 
-print( solve2D([leq(-1, -1, -1), leq(1, -1, -1)]) )
 
-
-l1 = leq(-10, -1, 2)
-l2 = leq(1, -2, -5)
-l3 = leq(2, -1, -7)
-problem1 = [l1, l2, l3]
-
-print( "0 1 2" )
-print( solve2D(problem1) )
-
-for i in range(3):
-    for j in range(3):
-        if i != j:
-            print( "{0} {1}".format(i, j) )
-            print( solve2D([problem1[i], problem1[j]]) )
-
-camera = (0, -100)
+#camera = (0, -100)
 
 # example 1: in lane
 segments = [LineSegment(-100, -100, -20, 20), # one on left
