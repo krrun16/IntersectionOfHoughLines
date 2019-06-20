@@ -24,16 +24,16 @@ class LinearEquation2D(object):
         # x values that will be plotted based on fixed plot dimensions
         # e.g., try steep lines right now...
         x = np.linspace(minx, maxx, npoints)
-        y = (self.xc * x - self.b) / (-self.yc)
+        y = (-self.xc * x + self.b) / self.yc
         
         plt.plot(x, y, draw)
 
 # helper function to get a line from a line segment
 def lineFromSegment(seg):
     m = (seg.y2 - seg.y1)/(seg.x2 - seg.x1)
-    xc = m
-    yc = -1
-    b = m * seg.x1 - seg.y1
+    xc = -m
+    yc = 1
+    b = seg.y1 - m * seg.x1 
     return LinearEquation2D(xc, yc, b)
 
 # convenience
