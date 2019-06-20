@@ -18,8 +18,12 @@ class LinearEquation2D(object):
         self.yc = yc
         self.b = b
 
-    def plot(self, miny=-100, maxy=100, npoints=100, draw='-r'):
-        x = np.linspace(miny, maxy, npoints)
+    def plot(self, minx=-100, maxx=100, npoints=100, draw='-r'):
+        # this way of choosing the extent of the plotting
+        # needs improvement; would be better to choose the
+        # x values that will be plotted based on fixed plot dimensions
+        # e.g., try steep lines right now...
+        x = np.linspace(minx, maxx, npoints)
         y = (self.xc * x - self.b) / (-self.yc)
         
         plt.plot(x, y, draw)
