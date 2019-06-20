@@ -19,7 +19,7 @@ class LinearEquation2D(object):
         self.b = b
 
     def plot(self, miny=-100, maxy=100, npoints=100, draw='-r'):
-        x = np.linspace(minx, maxx, npoints)
+        x = np.linspace(miny, maxy, npoints)
         y = (self.xc * x - self.b) / (-self.yc)
         
         plt.plot(x, y, draw)
@@ -40,10 +40,15 @@ def leq(xc, yc, b):
 # eqns is a list of LinearEquation2D
 #
 # returns a list [x, y] representing the solution
+#
+# relies on cv2.solve; for documentation see
+# https://docs.opencv.org/2.4/modules/core/doc/operations_on_arrays.html#solve
 def solve2D(eqns):
     A = np.array([[e.xc, e.yc] for e in eqns], dtype='float')
     B = np.array([e.b for e in eqns], dtype='float')
-    return cv2.solve(A, B, flags=cv2.DECOMP_SVD)
+    valid, soln = cv2.solve(A, B, flags=cv2.DECOMP_SVD)
+    assert valid, "No solution found"
+    return soln
 
 
 #camera = (0, -100)
@@ -54,7 +59,7 @@ segments = [LineSegment(-100, -100, -20, 20), # one on left
          LineSegment(-200, -100, -40, 20), # another on left
          LineSegment(-50, -50, 35, -35)] # outlier (outnumbered by inliers
 lines = [lineFromSegment(s) for s in segments]
-_, intersect = solve2D(lines)
+intersect = solve2D(lines)
 print (intersect)
 
 [l.plot(draw=d) for l,d in zip(lines, 3*['-r']+1*['-g'])]
@@ -68,7 +73,7 @@ segments = [LineSegment(-100, -100, -120, 20), # one on left
          LineSegment(-150, -00, -170, 20), # another on left
          LineSegment(-75, -75, 50, -50)] # outlier (outnumbered by inliers
 lines = [lineFromSegment(s) for s in segments]
-_, intersect = solve2D(lines)
+intersect = solve2D(lines)
 print (intersect)
 
 [l.plot(draw=d) for l,d in zip(lines, 3*['-r']+1*['-g'])]
@@ -86,7 +91,7 @@ segments = [LineSegment(-100, -100, -20, 20), # one on left
          LineSegment(-25, -25, 25, -25),
          LineSegment(-50, -50, 50, -50)] 
 lines = [lineFromSegment(s) for s in segments]
-_, intersect = solve2D(lines)
+intersect = solve2D(lines)
 print (intersect)
 
 [l.plot(draw=d) for l,d in zip(lines, 3*['-r']+4*['-g'])]
@@ -104,7 +109,7 @@ for ybase in [-100, -75, -50, -25, 0]:
              LineSegment(-25, 25+ybase, 25, 25+ybase),
              LineSegment(-50, 50+ybase, 50, 50+ybase)] 
     lines = [lineFromSegment(s) for s in segments]
-    _, intersect = solve2D(lines)
+    intersect = solve2D(lines)
     print (intersect)
 
     [l.plot(draw=d) for l,d in zip(lines, 3*['-r']+4*['-g'])]
